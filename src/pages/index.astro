@@ -1,11 +1,192 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import "leaflet/dist/leaflet.css";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const response = await fetch("https://api.ipify.org?format=json");
+const data = await response.json();
+
+const IP = await fetch(
+	`https://geo.ipify.org/api/v2/country,city?apiKey=${import.meta.env.KEY}&ipAddress=${data.ip}`,
+);
+const ip = await IP.json();
+
+const searchIpData = ip;
+const searchIp = data.ip;
 ---
 
 <Layout>
-	<Welcome />
+	<script>
+		import { LatLng, Map, map, marker, tileLayer } from "leaflet";
+		import { actions } from "astro:actions";
+		let mapInstance: Map | undefined;
+
+		interface IpData {
+			lat: number;
+			lng: number;
+		}
+
+		function initializeMap({ lat, lng }: IpData) {
+			if (mapInstance) {
+				mapInstance.remove();
+			}
+
+			const mapElement = map("map", {
+				center: new LatLng(lat, lng),
+				zoom: 20,
+			});
+
+			tileLayer(`https://tile.openstreetmap.org/{z}/{x}/{y}.png`, {
+				attribution:
+					'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+			}).addTo(mapElement);
+			marker([lat, lng]).addTo(mapElement);
+
+			mapInstance = mapElement;
+		}
+
+		// Inicializa o mapa quando a página carrega
+		window.addEventListener("DOMContentLoaded", () => {
+			const mapElement = document.getElementById("map");
+			const initialIp = JSON.parse(
+				mapElement?.dataset.location as string,
+			);
+			initializeMap(initialIp);
+
+			// Adiciona evento para interceptar o envio do formulário
+			const form = document.getElementById(
+				"searchForm",
+			) as HTMLFormElement;
+			form.addEventListener("submit", async (e) => {
+				e.preventDefault(); // Impede o envio normal do formulário
+
+				const formData = new FormData(form);
+
+				const { data } = await actions.searchIpAction(formData);
+				if (data) {
+					const ip = document.getElementById(
+						"ip-address",
+					) as HTMLParagraphElement;
+					ip.textContent = data?.ip;
+					const location = document.getElementById(
+						"location",
+					) as HTMLParagraphElement;
+					location.textContent = data?.location?.region;
+					const timezone = document.getElementById(
+						"timezone",
+					) as HTMLParagraphElement;
+					timezone.textContent = data?.location?.timezone;
+					const isp = document.getElementById(
+						"isp",
+					) as HTMLParagraphElement;
+					isp.textContent = data?.isp ?? "Unknown";
+
+					const newMapData = document.getElementById("map");
+					if (newMapData) {
+						initializeMap({
+							lat: data?.location.lat,
+							lng: data?.location.lng,
+						});
+					}
+				}
+			});
+		});
+	</script>
+	<div class="grid grid-rows-[auto_1fr] min-h-screen">
+		<div
+			class="flex flex-col gap-y-8 items-center justify-center bg-[url(../assets/pattern-bg-desktop.png)] min-h-[35%] bg-cover bg-no-repeat py-10"
+		>
+			<h1 class="text-white font-bold text-2xl">IP Address Tracker</h1>
+			<form
+				id="searchForm"
+				method="post"
+				class="flex justify-center rounded-md w-full px-2"
+			>
+				<input
+					type="text"
+					name="searchIp"
+					placeholder="Search for any IP address or domain"
+					class="bg-white px-4 py-2 rounded-l-md w-[92%] xl:w-[20%] font-medium"
+				/>
+				<button
+					type="submit"
+					class="bg-zinc-900 hover:bg-zinc-700 text-white p-4 xl:p-2 rounded-r-md cursor-pointer"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="lucide lucide-chevron-right"
+					>
+						<path d="m9 18 6-6-6-6"></path>
+					</svg>
+				</button>
+			</form>
+
+			<div
+				class="grid grid-cols-1 xl:grid-cols-7 -mb-24 bg-white rounded-xl w-[96%] xl:w-[60%] items-center justify-center p-2 xl:p-5 gap-4 z-999"
+			>
+				<div
+					class="flex flex-col gap-y-2 items-center xl:items-start justify-center"
+				>
+					<h2 class="text-md font-bold text-gray-400 tracking-wider">
+						IP ADDRESS
+					</h2>
+					<h3 id="ip-address" class="text-xl font-bold text-black">
+						{searchIp}
+					</h3>
+				</div>
+				<hr
+					class="bg-gray-400 h-20 py-5 w-[1px] mx-auto max-xl:hidden"
+				/>
+				<div
+					class="flex flex-col gap-y-2 items-center xl:items-start justify-center"
+				>
+					<h2 class="text-md font-bold text-gray-400 tracking-wider">
+						LOCATION
+					</h2>
+					<h3 id="location" class="text-xl font-bold text-black">
+						{searchIpData.location.region}
+					</h3>
+				</div>
+				<hr
+					class="bg-gray-400 h-20 py-5 w-[1px] mx-auto max-xl:hidden"
+				/>
+				<div
+					class="flex flex-col gap-y-2 items-center xl:items-start justify-center"
+				>
+					<h2 class="text-md font-bold text-gray-400 tracking-wider">
+						TIMEZONE
+					</h2>
+					<h3 id="timezone" class="text-xl font-bold text-black">
+						{searchIpData.location.timezone}
+					</h3>
+				</div>
+				<hr
+					class="bg-gray-400 h-20 py-5 w-[1px] mx-auto max-xl:hidden"
+				/>
+				<div
+					class="flex flex-col gap-y-2 items-center xl:items-start justify-center"
+				>
+					<h2 class="text-md font-bold text-gray-400 tracking-wider">
+						ISP
+					</h2>
+					<h3 id="isp" class="text-xl font-bold text-black">
+						{searchIpData.isp}
+					</h3>
+				</div>
+			</div>
+		</div>
+		<div
+			id="map"
+			class="row-start-2"
+			data-location={JSON.stringify(ip?.location)}
+		>
+		</div>
+	</div>
 </Layout>
