@@ -43,8 +43,7 @@ const searchIp = data.ip;
 
 			mapInstance = mapElement;
 		}
-
-		// Inicializa o mapa quando a página carrega
+		
 		window.addEventListener("DOMContentLoaded", () => {
 			const mapElement = document.getElementById("map");
 			const initialIp = JSON.parse(
@@ -52,12 +51,11 @@ const searchIp = data.ip;
 			);
 			initializeMap(initialIp);
 
-			// Adiciona evento para interceptar o envio do formulário
 			const form = document.getElementById(
 				"searchForm",
 			) as HTMLFormElement;
 			form.addEventListener("submit", async (e) => {
-				e.preventDefault(); // Impede o envio normal do formulário
+				e.preventDefault();
 
 				const formData = new FormData(form);
 

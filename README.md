@@ -1,48 +1,54 @@
-# Astro Starter Kit: Basics
+# Frontend Mentor - IP address tracker solution
 
-```sh
-npm create astro@latest -- --template basics
-```
+This is a solution to the [IP address tracker challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/ip-address-tracker-I8-0yYAH0). Frontend Mentor challenges help you improve your coding skills by building realistic projects. 
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## Table of contents
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- [Overview](#overview)
+  - [The challenge](#the-challenge)
+  - [Screenshot](#screenshot)
+  - [Links](#links)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [What I learned](#what-i-learned)
+- [Author](#author)
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+## Overview
 
-## 🚀 Project Structure
+### The challenge
 
-Inside of your Astro project, you'll see the following folders and files:
+Users should be able to:
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+- View the optimal layout for each page depending on their device's screen size
+- See hover states for all interactive elements on the page
+- See their own IP address on the map on the initial page load
+- Search for any IP addresses or domains and see the key information and location
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+### Screenshot
 
-## 🧞 Commands
+![](./screenshot.png)
 
-All commands are run from the root of the project, from a terminal:
+### Links
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+- Live Site URL: [https://ip-address-tracker-kd.netlify.app/](https://ip-address-tracker-kd.netlify.app/)
 
-## 👀 Want to learn more?
+## My process
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+### Built with
+
+- Semantic HTML5 markup
+- CSS custom properties
+- Flexbox
+- CSS Grid
+- Mobile-first workflow
+- [Astro](https://astro.build/) - JS Library
+- [TailwindCSS](https://tailwindcss.com/) - For styles
+
+### What I learned
+
+I learned more about the Leaflet API, and IPify's API. I've used the Leaflet API to create a map, and IPify's API to get the user's IP address and locations.
+
+## Author
+
+- Website - [KurielDev](https://kurieldev.vercel.app)
+- Frontend Mentor - [@Kuriel23](https://www.frontendmentor.io/profile/kuriel23)

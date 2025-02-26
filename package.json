@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/netlify": "^6.2.1",
     "@fontsource-variable/rubik": "^5.1.1",
     "@tailwindcss/vite": "^4.0.8",
     "@types/leaflet": "^1.9.16",
